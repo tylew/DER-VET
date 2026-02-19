@@ -323,21 +323,22 @@ class MicrogridScenario(Scenario):
     def optimize_problem_loop(self, **kwargs):
         """ This function selects on opt_agg of data in time_series and calls optimization_problem on it.
 
+        Uses LP-first strategy inherited from Scenario: when binary mode is
+        enabled, solves the LP relaxation first and only escalates to MIP if
+        simultaneous charge/discharge is detected in the solution.
+
         Args:
             **kwargs: allows child classes to pass in additional arguments to set_up_optimization
 
         """
         # NOTE: system_requirements may already exist via run.fill_and_drop_data()
         # but we need to run it again after a possible Reliability Sizing occurs
-        # can we just reset it to an empty dict here, to avoid redundancies?
-        #self.system_requirements = {}
         self.system_requirements = self.service_agg.identify_system_requirements(self.poi.der_list,
                                                                                   self.opt_years,
                                                                                   self.frequency)
 
         alpha = 1
         if self.poi.is_sizing_optimization:
-            # calculate the annuity scalar that will convert any yearly costs into a present value
             alpha = self.cost_benefit_analysis.annuity_scalar(self.opt_years)
         if self.service_agg.post_facto_reliability_only():
             TellUser.info("Only active Value Stream is post facto only, so not optimizations " +
@@ -355,30 +356,14 @@ class MicrogridScenario(Scenario):
         TellUser.info("Starting optimization loop")
         for opt_period in self.optimization_levels.predictive.unique():
 
-            # setup + run optimization then return optimal objective costs
-            functions, constraints, sub_index = self.set_up_optimization(opt_period,
-                                                                         annuity_scalar=alpha,
-                                                                         ignore_der_costs=self.service_agg.post_facto_reliability_only())
-            if not len(constraints) and not len(functions.values()):
-                TellUser.info(f"Optimization window #{opt_period} does not have any constraints or objectives to minimize -- SKIPPING...")
-                continue
+            cvx_problem, obj_expressions, cvx_error_msg, sub_index = \
+                self._solve_with_lp_first(
+                    opt_period,
+                    annuity_scalar=alpha,
+                    ignore_der_costs=self.service_agg.post_facto_reliability_only(),
+                    force_glpk_mi=self.poi.has_thermal_load,
+                )
 
-            #NOTE: these print statements reveal the final constraints and costs for debugging
-            if DEBUG:
-                print(f'\nFinal constraints ({len(constraints)}):')
-                #print('\n'.join([f'{i}: is_dpp? {c.is_dcp(dpp=True)} : {c}' for i, c in enumerate(constraints)]))
-                print('\n'.join([f'{i}: {c}' for i, c in enumerate(constraints)]))
-                print(f'\ncosts to minimize ({len(functions)}):')
-                for k, v in functions.items():
-                    #print(type(v))
-                    if isinstance(v, float):
-                        print(f'{k}: {v}')
-                    else:
-                        print(f'{k}: {v}')
-                        #print(f'{k}: is_dpp? {v.is_dcp(dpp=True)} : {v}')
-                print()
-
-            cvx_problem, obj_expressions, cvx_error_msg = self.solve_optimization(functions, constraints, force_glpk_mi=self.poi.has_thermal_load)
             self.save_optimization_results(opt_period, sub_index, cvx_problem, obj_expressions, cvx_error_msg)
 
     def set_up_optimization(self, opt_window_num, annuity_scalar=1, ignore_der_costs=False):

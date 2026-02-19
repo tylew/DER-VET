@@ -197,6 +197,49 @@ class Scenario(object):
         self.system_requirements = None
         self.opt_engine = True  # indicates that dervet should go to the optimization module and size there
 
+    def _toggle_ess_binary(self, enable):
+        """Toggle binary mode on all energy storage DERs.
+
+        Args:
+            enable (bool): True to enable binary variables, False to relax to LP
+
+        Returns:
+            dict: mapping of DER name to its original incl_binary value
+        """
+        original = {}
+        for der in self.poi.active_ders:
+            if hasattr(der, 'incl_binary'):
+                original[der.name] = der.incl_binary
+                der.incl_binary = enable
+        return original
+
+    def _restore_ess_binary(self, original_flags):
+        """Restore binary mode flags saved by _toggle_ess_binary."""
+        for der in self.poi.active_ders:
+            if der.name in original_flags:
+                der.incl_binary = original_flags[der.name]
+
+    def _has_simultaneous_charge_discharge(self, threshold=0.1):
+        """Check whether the current LP solution has any timestep where an ESS
+        charges and discharges simultaneously above *threshold* (kW).
+
+        Returns:
+            bool: True if simultaneous charge/discharge detected
+        """
+        for der in self.poi.active_ders:
+            if not hasattr(der, 'variables_dict'):
+                continue
+            vd = der.variables_dict
+            if 'ch' not in vd or 'dis' not in vd:
+                continue
+            ch_val = vd['ch'].value
+            dis_val = vd['dis'].value
+            if ch_val is None or dis_val is None:
+                continue
+            if np.any((ch_val > threshold) & (dis_val > threshold)):
+                return True
+        return False
+
     def set_up_poi_and_service_aggregator(self, point_of_interconnection_class=POI, service_aggregator_class=ServiceAggregator):
         """ Initialize the POI and service aggregator with DERs and valuestreams to be evaluated.
 
@@ -333,25 +376,61 @@ class Scenario(object):
     def optimize_problem_loop(self):
         """ This function selects on opt_agg of data in time_series and calls optimization_problem on it.
 
+        When binary mode is enabled, uses an LP-first strategy: solve the
+        relaxed LP (fast), then only escalate to the full MIP if the LP
+        solution exhibits simultaneous charge and discharge.
         """
         if not self.opt_engine:
             return
 
         TellUser.info("Starting optimization loop")
         for opt_period in self.optimization_levels.predictive.unique():
-            # setup + run optimization then return optimal objective costs
-            functions, constraints, sub_index = self.set_up_optimization(opt_period)
 
-            ##NOTE: these print statements reveal the final constraints and costs for debugging
-            #print(f'\nFinal constraints ({len(constraints)}):')
-            #print(f'\nconstraints ({len(constraints)}):')
-            #print('\n'.join([f'{i}: {c}' for i, c in enumerate(constraints)]))
-            #print(f'\ncosts ({len(functions)}):')
-            #print('\n'.join([f'{k}: {v}' for k, v in functions.items()]))
-            #print()
+            cvx_problem, obj_expressions, cvx_error_msg, sub_index = \
+                self._solve_with_lp_first(opt_period)
 
-            cvx_problem, obj_expressions, cvx_error_msg = self.solve_optimization(functions, constraints)
             self.save_optimization_results(opt_period, sub_index, cvx_problem, obj_expressions, cvx_error_msg)
+
+    def _solve_with_lp_first(self, opt_period, annuity_scalar=1, ignore_der_costs=False, force_glpk_mi=False):
+        """LP-first solve strategy for a single optimization window.
+
+        If binary mode is active on any ESS, first solves the LP relaxation.
+        Only re-solves as MIP if simultaneous charge/discharge is detected.
+
+        Returns:
+            tuple: (cvx_problem, obj_expressions, cvx_error_msg, sub_index)
+        """
+        if not self.incl_binary:
+            functions, constraints, sub_index = self.set_up_optimization(
+                opt_period, annuity_scalar, ignore_der_costs)
+            cvx_problem, obj_expressions, cvx_error_msg = self.solve_optimization(
+                functions, constraints, force_glpk_mi=force_glpk_mi)
+            return cvx_problem, obj_expressions, cvx_error_msg, sub_index
+
+        # Phase 1: solve LP relaxation (binary disabled)
+        original_flags = self._toggle_ess_binary(False)
+        functions, constraints, sub_index = self.set_up_optimization(
+            opt_period, annuity_scalar, ignore_der_costs)
+        cvx_problem, obj_expressions, cvx_error_msg = self.solve_optimization(
+            functions, constraints, force_glpk_mi=force_glpk_mi)
+
+        if not self._has_simultaneous_charge_discharge():
+            TellUser.info("LP relaxation is clean (no simultaneous charge/discharge) -- skipping MIP.")
+            self._restore_ess_binary(original_flags)
+            return cvx_problem, obj_expressions, cvx_error_msg, sub_index
+
+        # Phase 2: simultaneous ch/dis detected -- re-solve as MIP with time limit
+        TellUser.warning(
+            "LP relaxation has simultaneous charge/discharge -- "
+            "re-solving with binary constraints."
+        )
+        self._restore_ess_binary(original_flags)
+        functions, constraints, sub_index = self.set_up_optimization(
+            opt_period, annuity_scalar, ignore_der_costs)
+        cvx_problem, obj_expressions, cvx_error_msg = self.solve_optimization(
+            functions, constraints, force_glpk_mi=force_glpk_mi)
+
+        return cvx_problem, obj_expressions, cvx_error_msg, sub_index
 
     def set_up_optimization(self, opt_window_num, annuity_scalar=1, ignore_der_costs=False):
         """ Sets up and runs optimization on a subset of time in a year. Called within a loop.
@@ -482,6 +561,19 @@ class Scenario(object):
 
         return funcs, consts, sub_index
 
+    MIP_TIME_LIMIT_MS = 300_000   # 5 minute cap per MIP solve
+    MIP_GAP_TOLERANCE = 0.01     # accept solutions within 1% of optimal
+
+    @staticmethod
+    def _solver_options(solver_name):
+        """Return solver-specific options. Adds a time limit and MIP gap
+        for GLPK_MI to prevent the solver from running indefinitely.
+        These options are safe no-ops for pure LP problems."""
+        if solver_name == 'GLPK_MI':
+            return {'glpk': {'tm_lim': Scenario.MIP_TIME_LIMIT_MS,
+                             'mip_gap': Scenario.MIP_GAP_TOLERANCE}}
+        return {}
+
     def solve_optimization(self, obj_expression, obj_const, force_glpk_mi=False):
         """ Sets up and runs optimization on a subset of time in a year. Called within a loop.
 
@@ -523,7 +615,8 @@ class Scenario(object):
                 solver_name = solver_sequence.pop(0)
                 start = time.time()
                 TellUser.debug(f"Using {solver_name} solver")
-                prob.solve(verbose=self.verbose_opt, solver=solver_dict[solver_name])
+                solver_opts = self._solver_options(solver_name)
+                prob.solve(verbose=self.verbose_opt, solver=solver_dict[solver_name], **solver_opts)
                 end = time.time()
                 TellUser.info("Time (seconds) for solver to finish: " + str(end - start))
             except (cvx.error.SolverError, RuntimeError) as e:
@@ -534,7 +627,8 @@ class Scenario(object):
                     solver_name = solver_sequence.pop(0)
                     start = time.time()
                     TellUser.debug(f"Using {solver_name} solver")
-                    prob.solve(verbose=self.verbose_opt, solver=solver_dict[solver_name])
+                    solver_opts = self._solver_options(solver_name)
+                    prob.solve(verbose=self.verbose_opt, solver=solver_dict[solver_name], **solver_opts)
                     end = time.time()
                     TellUser.info("Time (seconds) for solver to finish: " + str(end - start))
                 except (cvx.error.SolverError, RuntimeError) as e:

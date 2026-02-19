@@ -3,7 +3,7 @@
 !/Python/
 */Plots/
 */Results/
-
+.DS_Store
 # Data files: CSV, XML, Excel, etc.
 *.csv
 *.xml

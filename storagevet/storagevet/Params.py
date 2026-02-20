@@ -1,4 +1,6 @@
 """
+Modified by Brightfield Inc. -- added CoincidentPeakShaving (CP) value stream registration.
+
 Copyright (c) 2024, Electric Power Research Institute
 
  All rights reserved.
@@ -314,6 +316,7 @@ class Params:
         self.DR = self.read_and_validate('DR')
         self.RA = self.read_and_validate('RA')
         self.Volt = self.read_and_validate('Volt')
+        self.CP = self.read_and_validate('CP')
 
         # technologies/DERs
         self.PV = self.read_and_validate('PV')
@@ -1776,6 +1779,10 @@ class Params:
             self.User.update({'power': power,
                               'energy': energy,
                               'dt': dt})
+
+        if self.CP is not None:
+            self.CP['dt'] = dt
+            self.CP['ts_index'] = time_series.index
 
         if self.DCM is not None or self.retailTimeShift is not None:
             if scenario['incl_site_load'] != 1:

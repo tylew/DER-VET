@@ -1,4 +1,6 @@
 """
+Modified by Brightfield Inc. -- added CoincidentPeakShaving (CP) value stream registration.
+
 Copyright (c) 2024, Electric Power Research Institute
 
  All rights reserved.
@@ -94,6 +96,7 @@ from storagevet.ValueStreams.ResourceAdequacy import ResourceAdequacy
 from storagevet.ValueStreams.UserConstraints import UserConstraints
 from storagevet.ValueStreams.VoltVar import VoltVar
 from storagevet.ValueStreams.LoadFollowing import LoadFollowing
+from storagevet.ValueStreams.CoincidentPeakShaving import CoincidentPeakShaving
 from storagevet.Technology.BatteryTech import Battery
 from storagevet.Technology.CAESTech import CAES
 from storagevet.Technology.PVSystem import PV
@@ -131,6 +134,7 @@ class Scenario(object):
         'NSR': NonspinningReserve,
         'DCM': DemandChargeReduction,
         'retailTimeShift': EnergyTimeShift,
+        'CP': CoincidentPeakShaving,
     }
 
     def __init__(self, input_tree):
@@ -183,6 +187,7 @@ class Scenario(object):
             'NSR': input_tree.NSR,
             'DCM': input_tree.DCM,
             'retailTimeShift': input_tree.retailTimeShift,
+            'CP': input_tree.CP,
         }
         self.poi_inputs = input_tree.POI
         self.finance_inputs = input_tree.Finance

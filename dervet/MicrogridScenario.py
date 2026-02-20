@@ -1,4 +1,6 @@
 """
+Modified by Brightfield Inc. -- added CoincidentPeakShaving (CP) value stream.
+
 Copyright (c) 2024, Electric Power Research Institute
 
  All rights reserved.
@@ -59,6 +61,7 @@ from storagevet.ValueStreams.ResourceAdequacy import ResourceAdequacy
 from storagevet.ValueStreams.UserConstraints import UserConstraints
 from storagevet.ValueStreams.VoltVar import VoltVar
 from storagevet.ValueStreams.LoadFollowing import LoadFollowing
+from storagevet.ValueStreams.CoincidentPeakShaving import CoincidentPeakShaving
 from storagevet.Scenario import Scenario
 from dervet.CBA import CostBenefitAnalysis
 from dervet.MicrogridPOI import MicrogridPOI
@@ -103,6 +106,7 @@ class MicrogridScenario(Scenario):
         'NSR': NonspinningReserve,
         'DCM': DemandChargeReduction,
         'retailTimeShift': EnergyTimeShift,
+        'CP': CoincidentPeakShaving,
         'Reliability': Reliability
     }
 

@@ -982,6 +982,39 @@
                     }
                 }
             },
+            "CP": {
+                "keys": {
+                    "capacity_rate_monthly": {
+                        "cba": "n",
+                        "min": "0.0",
+                        "type": "float",
+                        "unit": "$/kW-mo"
+                    },
+                    "transmission_rate_monthly": {
+                        "cba": "n",
+                        "min": "0.0",
+                        "type": "float",
+                        "unit": "$/kW-mo"
+                    },
+                    "pjm_5cp_dates": {
+                        "cba": "n",
+                        "type": "string"
+                    },
+                    "utility_1cp_dates": {
+                        "cba": "n",
+                        "type": "string"
+                    },
+                    "growth": {
+                        "cba": "n",
+                        "max": "100.0",
+                        "min": "-100.0",
+                        "type": "float",
+                        "unit": "%/year"
+                    }
+                },
+                "max_num": "1",
+                "type": "service"
+            },
             "DA": {
                 "keys": {
                     "growth": {

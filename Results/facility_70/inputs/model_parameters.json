@@ -74,7 +74,7 @@
             "type": "Period"
           },
           "cycle_life_filename": {
-            "opt_value": "/Users/fsl/Documents/GitHub/DER-VET/Results/DER-VET_20260218180027/inputs/cycle_b67b52d3-b20f-40e0-9ba0-0725c533194b.csv",
+            "opt_value": "/Users/fsl/Documents/GitHub/DER-VET/Results/facility_70/inputs/cycle_b67b52d3-b20f-40e0-9ba0-0725c533194b.csv",
             "sensitivity": {
               "active": "no",
               "coupled": "None",
@@ -146,7 +146,7 @@
             "type": "float"
           },
           "ene_max_rated": {
-            "opt_value": "1000",
+            "opt_value": "500",
             "sensitivity": {
               "active": "no",
               "coupled": "None",
@@ -540,7 +540,7 @@
     },
     "DA": {
       "": {
-        "active": "no",
+        "active": "yes",
         "keys": {
           "growth": {
             "opt_value": "0",
@@ -556,7 +556,7 @@
     },
     "DCM": {
       "": {
-        "active": "no",
+        "active": "yes",
         "keys": {
           "growth": {
             "opt_value": "0",
@@ -609,7 +609,7 @@
             "type": "int"
           },
           "customer_tariff_filename": {
-            "opt_value": "/Users/fsl/Documents/GitHub/DER-VET/Results/DER-VET_20260218180027/inputs/tariff.csv",
+            "opt_value": "/Users/fsl/Documents/GitHub/DER-VET/Results/facility_70/inputs/tariff.csv",
             "sensitivity": {
               "active": "no",
               "coupled": "None",
@@ -708,7 +708,7 @@
             "type": "float"
           },
           "yearly_data_filename": {
-            "opt_value": "/Users/fsl/Documents/GitHub/DER-VET/Results/DER-VET_20260218180027/inputs/yearly.csv",
+            "opt_value": "/Users/fsl/Documents/GitHub/DER-VET/Results/facility_70/inputs/yearly.csv",
             "sensitivity": {
               "active": "no",
               "coupled": "None",
@@ -759,7 +759,7 @@
         "active": "yes",
         "keys": {
           "dir_absolute_path": {
-            "opt_value": "/Users/fsl/Documents/GitHub/DER-VET/Results/DER-VET_20260218180027/results",
+            "opt_value": "/Users/fsl/Documents/GitHub/DER-VET/Results/facility_70/results",
             "sensitivity": {
               "active": "no",
               "coupled": "None",
@@ -768,7 +768,7 @@
             "type": "string"
           },
           "errors_log_path": {
-            "opt_value": "/Users/fsl/Documents/GitHub/DER-VET/Results/DER-VET_20260218180027/results",
+            "opt_value": "/Users/fsl/Documents/GitHub/DER-VET/Results/facility_70/results",
             "sensitivity": {
               "active": "no",
               "coupled": "None",
@@ -962,7 +962,7 @@
             "type": "float"
           },
           "monthly_data_filename": {
-            "opt_value": "/Users/fsl/Documents/GitHub/DER-VET/Results/DER-VET_20260218180027/inputs/monthly.csv",
+            "opt_value": "/Users/fsl/Documents/GitHub/DER-VET/Results/facility_70/inputs/monthly.csv",
             "sensitivity": {
               "active": "no",
               "coupled": "None",
@@ -1016,7 +1016,7 @@
             "type": "Period"
           },
           "time_series_filename": {
-            "opt_value": "/Users/fsl/Documents/GitHub/DER-VET/Results/DER-VET_20260218180027/inputs/timeseries.csv",
+            "opt_value": "/Users/fsl/Documents/GitHub/DER-VET/Results/facility_70/inputs/timeseries.csv",
             "sensitivity": {
               "active": "no",
               "coupled": "None",

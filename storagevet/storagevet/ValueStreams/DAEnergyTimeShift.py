@@ -122,7 +122,12 @@ class DAEnergyTimeShift(ValueStream):
         return df_dict
 
     def proforma_report(self, opt_years, apply_inflation_rate_func, fill_forward_func, results):
-        """ Calculates the proforma that corresponds to participation in this value stream
+        """ Calculates the proforma that corresponds to participation in this value stream.
+
+        Reports three columns:
+          - DA ETS: total site energy cost at DA prices (with battery)
+          - DA Baseline Energy Cost: what the site would pay without the battery
+          - DA Arbitrage Value: incremental savings from battery dispatch
 
         Args:
             opt_years (list): list of years the optimization problem ran for
@@ -136,13 +141,17 @@ class DAEnergyTimeShift(ValueStream):
         """
         proforma = super().proforma_report(opt_years, apply_inflation_rate_func,
                                            fill_forward_func, results)
+        original_load = results.get('Total Original Load (kW)',
+                                    results.get('Total Load (kW)'))
         energy_cost = self.dt * np.multiply(results['Net Load (kW)'], self.price) * -1
-        # NOTE: DA ETS here represents the cost of electricity, and we use the Net Load column
-        #       a negative energy_cost is a cost
-        #       a positive energy_cost is a benefit
+        baseline_cost = self.dt * np.multiply(original_load, self.price) * -1
         for year in opt_years:
-            year_subset = energy_cost[energy_cost.index.year == year]
-            proforma.loc[pd.Period(year=year, freq='Y'), 'DA ETS'] = year_subset.sum()
+            period = pd.Period(year=year, freq='Y')
+            yr_actual = energy_cost[energy_cost.index.year == year].sum()
+            yr_baseline = baseline_cost[baseline_cost.index.year == year].sum()
+            proforma.loc[period, 'DA ETS'] = yr_actual
+            proforma.loc[period, 'DA Baseline Energy Cost'] = yr_baseline
+            proforma.loc[period, 'DA Arbitrage Value'] = yr_actual - yr_baseline
         proforma = fill_forward_func(proforma, self.growth)
         return proforma
 

@@ -1,2 +1,2 @@
-,Avoided CP Capacity Charges,Avoided CP Transmission Charges,BATTERY: bess 1 Capital Cost,BATTERY: bess 1 Decommissioning Cost,BATTERY: bess 1 Fixed O&M Cost,BATTERY: bess 1 Salvage Value,BATTERY: bess 1 Variable O&M Cost,Federal Tax Burden,State Tax Burden,User Constraints Value,Lifetime Present Value
-NPV,740122.38,478920.60,-317500.00,0.00,-27733.60,0.00,0.00,-180188.71,-54768.61,0.00,638852.06
+,Avoided CP Capacity Charges,Avoided CP Transmission Charges,Avoided Demand Charge,Avoided Energy Charge,BATTERY: bess 1 Capital Cost,BATTERY: bess 1 Decommissioning Cost,BATTERY: bess 1 Fixed O&M Cost,BATTERY: bess 1 Salvage Value,BATTERY: bess 1 Variable O&M Cost,Baseline Demand Cost,Baseline Energy Cost,Federal Tax Burden,State Tax Burden,User Constraints Value,Lifetime Present Value
+NPV,740122.38,478920.60,62138.94,-1083.77,-227500.00,0.00,-27733.60,0.00,0.00,-341734.89,-578597.47,-207824.68,-63168.60,0.00,753871.27

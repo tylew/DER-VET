@@ -391,9 +391,21 @@ class Financial:
         year_indexed_rows = pro_forma[[isinstance(i, pd.Period) for i in pro_forma.index]].sort_index()
         pro_forma = pd.concat([str_indexed_rows, year_indexed_rows])
 
-        # calculate the net (sum of the row's columns)
-        pro_forma['Yearly Net Value'] = pro_forma.sum(axis=1)
+        # calculate the net (sum of the row's columns, excluding informational)
+        pro_forma['Yearly Net Value'] = pro_forma[
+            self._value_columns(pro_forma)].sum(axis=1)
         return pro_forma
+
+    INFORMATIONAL_COLUMNS = {'DA ETS', 'DA Baseline Energy Cost',
+                             'Baseline Energy Cost', 'Baseline Demand Cost'}
+
+    @classmethod
+    def _value_columns(cls, pro_forma):
+        """Return column names that contribute to Yearly Net Value,
+        excluding informational/baseline tracking columns."""
+        return [c for c in pro_forma.columns
+                if c not in cls.INFORMATIONAL_COLUMNS
+                and c != 'Yearly Net Value']
 
     def calculate_yearly_avoided_cost(self, charge_type, growth_rate):
         """Calculated the yearly avoided cost in the monthly bill, given the original cost and
@@ -410,11 +422,14 @@ class Financial:
         original_cost = f'Original {charge_type} Charge ($)'
         new_cost = f'{charge_type} Charge ($)'
         avoided_cost_name = f'Avoided {charge_type} Charge'
+        baseline_cost_name = f'Baseline {charge_type} Cost'
 
         yr_costs = self.monthly_bill.groupby(by=lambda x: x.year)[[new_cost, original_cost]].sum()
         avoided_cost = yr_costs.loc[:, original_cost] - yr_costs.loc[:, new_cost]
         for year, value in avoided_cost.items():
             avoided_cost_df.loc[pd.Period(year, freq='Y'), avoided_cost_name] = value
+            avoided_cost_df.loc[pd.Period(year, freq='Y'), baseline_cost_name] = \
+                -yr_costs.loc[year, original_cost]
         avoided_cost_df = self.fill_non_optimization_years(avoided_cost_df, growth_rate)
         return avoided_cost_df
 

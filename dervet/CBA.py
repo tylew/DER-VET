@@ -354,8 +354,10 @@ class CostBenefitAnalysis(Financial):
         # sort alphabetically
         proforma.sort_index(axis=1, inplace=True)
         proforma.fillna(value=0, inplace=True)
-        # recalculate the net (sum of the row's columns)
-        proforma['Yearly Net Value'] = proforma.sum(axis=1)
+        # recalculate the net (sum of the row's columns, excluding informational)
+        from storagevet.Finances import Financial
+        proforma['Yearly Net Value'] = proforma[
+            Financial._value_columns(proforma)].sum(axis=1)
         return proforma
 
     def replacement_costs(self, proforma, technologies):
@@ -469,8 +471,11 @@ class CostBenefitAnalysis(Financial):
             if tax_contribution is not None:
                 tax_calcs = pd.concat([tax_calcs, tax_contribution], axis=1)
         # 2) calculate yearly_net (taking into account the taxable contribution of each technology
-        # asset)
-        yearly_net = tax_calcs.sum(axis=1)
+        # asset), excluding informational baseline columns
+        from storagevet.Finances import Financial
+        taxable_cols = [c for c in tax_calcs.columns
+                        if c not in Financial.INFORMATIONAL_COLUMNS]
+        yearly_net = tax_calcs[taxable_cols].sum(axis=1)
         tax_calcs['Taxable Yearly Net'] = yearly_net
 
         # 3) Calculate State tax based on the net cash flows in each year

@@ -130,25 +130,19 @@
             },
             "CP": {
                 "type": "service",
-                "max_num": "1",
+                "max_num": "10",
                 "keys": {
-                    "capacity_rate_monthly": {
+                    "rate_monthly": {
                         "cba": "n",
                         "min": "0.0",
                         "type": "float",
                         "unit": "$/kW-mo"
                     },
-                    "transmission_rate_monthly": {
-                        "cba": "n",
-                        "min": "0.0",
-                        "type": "float",
-                        "unit": "$/kW-mo"
-                    },
-                    "pjm_5cp_dates": {
+                    "cp_dates": {
                         "cba": "n",
                         "type": "string"
                     },
-                    "utility_1cp_dates": {
+                    "label": {
                         "cba": "n",
                         "type": "string"
                     },

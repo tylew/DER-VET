@@ -38,6 +38,13 @@ CP_REGISTRY: Dict[int, Dict[str, object]] = {
                 CP(date(2024, 7, 16), 18),
             },
         },
+        "jcpl_5cp": {
+            CP(date(2024, 7, 9), 18),
+            CP(date(2024, 7, 10), 18),
+            CP(date(2024, 7, 15), 19),
+            CP(date(2024, 7, 16), 18),
+            CP(date(2024, 8, 1), 19),
+        },
     },
     2025: {
         "pjm": {

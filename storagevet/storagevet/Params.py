@@ -1781,8 +1781,9 @@ class Params:
                               'dt': dt})
 
         if self.CP is not None:
-            self.CP['dt'] = dt
-            self.CP['ts_index'] = time_series.index
+            for cp_id, cp_params in self.CP.items():
+                cp_params['dt'] = dt
+                cp_params['ts_index'] = time_series.index
 
         if self.DCM is not None or self.retailTimeShift is not None:
             if scenario['incl_site_load'] != 1:

@@ -486,58 +486,6 @@
         "active": "no"
       }
     },
-    "CP": {
-      "": {
-        "active": "yes",
-        "keys": {
-          "capacity_rate_monthly": {
-            "opt_value": "21.186",
-            "sensitivity": {
-              "active": "no",
-              "coupled": "None",
-              "value": "nan"
-            },
-            "type": "float"
-          },
-          "transmission_rate_monthly": {
-            "opt_value": "13.7091",
-            "sensitivity": {
-              "active": "no",
-              "coupled": "None",
-              "value": "nan"
-            },
-            "type": "float"
-          },
-          "pjm_5cp_dates": {
-            "opt_value": "2025-06-23:18,2025-06-24:18,2025-06-25:15,2025-07-28:18,2025-07-29:18",
-            "sensitivity": {
-              "active": "no",
-              "coupled": "None",
-              "value": "nan"
-            },
-            "type": "string"
-          },
-          "utility_1cp_dates": {
-            "opt_value": "2025-06-24:19",
-            "sensitivity": {
-              "active": "no",
-              "coupled": "None",
-              "value": "nan"
-            },
-            "type": "string"
-          },
-          "growth": {
-            "opt_value": "3",
-            "sensitivity": {
-              "active": "no",
-              "coupled": "None",
-              "value": "nan"
-            },
-            "type": "float"
-          }
-        }
-      }
-    },
     "DA": {
       "": {
         "active": "no",

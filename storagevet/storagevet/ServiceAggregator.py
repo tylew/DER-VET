@@ -52,9 +52,18 @@ class ServiceAggregator:
         self.value_streams = {}
 
         for service, params_input in value_stream_inputs_map.items():
-            if params_input is not None:  # then Params class found an input
-                TellUser.info("Initializing: " + str(service))
-                self.value_streams[service] = value_stream_class_map[service](params_input)
+            if params_input is not None and params_input != {}:
+                if (isinstance(params_input, dict) and params_input
+                        and all(isinstance(v, dict) for v in params_input.values())):
+                    # Multi-instance service (e.g. CP with max_num > 1)
+                    for inst_id, inst_params in params_input.items():
+                        inst_params['ID'] = inst_id
+                        key = f"{service}-{inst_id}" if inst_id else service
+                        TellUser.info(f"Initializing: {key}")
+                        self.value_streams[key] = value_stream_class_map[service](inst_params)
+                else:
+                    TellUser.info("Initializing: " + str(service))
+                    self.value_streams[service] = value_stream_class_map[service](params_input)
         TellUser.debug("Finished adding value streams")
 
         self.sys_requirements = {}

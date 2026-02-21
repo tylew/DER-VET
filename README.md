@@ -11,6 +11,126 @@ technical understanding and unbiased cost-performance data.
 
 DER-VET was developed with funding from the California Energy Commission. EPRI plans to support continuing updates and enhancements.
 
+## Running Scenario Comparisons
+
+`run_scenarios.py` at the repo root is the primary way to run and compare
+battery dispatch simulations. You define all your scenarios in one file, run a
+single command, and get results with plots for every scenario.
+
+**TO RUN:** From the repo root with `dervet-venv` activated:
+
+```bash
+python run_scenarios.py
+```
+
+### 1. Prerequisites
+
+Complete the [Getting Started](#getting-started) installation below so that the
+`dervet-venv` environment is set up and dependencies are installed.
+
+### 2. Define your scenarios
+
+Open `run_scenarios.py` and edit the configuration section near the top.
+
+**CP events** are defined as reusable variables:
+
+```python
+PJM_5CP = {
+    "id": "pjm_5cp",            # unique identifier (used in output filenames)
+    "label": "PJM 5CP",         # human-readable name (appears in reports)
+    "rate_monthly": 21.186,     # avoided cost rate in $/kW-month
+    "dates": "2025-06-23:18,2025-06-24:18,2025-06-25:15,2025-07-28:18,2025-07-29:18",
+    "growth": 3,                # annual growth rate (%)
+}
+```
+
+**Scenarios** combine a battery size, active services, and CP events:
+
+```python
+SCENARIOS = [
+    {
+        "name": "DCM_retail_CP",                              # output folder name
+        "battery": {"power_kw": 250, "energy_kwh": 500},     # battery sizing
+        "services": {"da": False, "dcm": True, "retail": True},  # value streams
+        "cp_events": [PJM_5CP, PSEG_1CP],                    # which CP events
+    },
+    # add more scenarios here ...
+]
+```
+
+Each scenario needs at least one active service (`da`, `dcm`, `retail`) or CP
+event. The `name` field determines the output directory; re-running with the
+same name overwrites previous results (idempotent).
+
+Available services:
+| Key | Value Stream |
+|-----|-------------|
+| `da` | Day-ahead energy arbitrage |
+| `dcm` | Demand charge management (peak shaving) |
+| `retail` | Retail energy time-shift |
+| `cp_events` | Coincident peak shaving (supports multiple discrete CP event types) |
+
+### 3. Run
+
+From the repo root with `dervet-venv` activated:
+
+```bash
+python run_scenarios.py
+```
+
+This runs every scenario in order, then generates plots and a summary table.
+
+To regenerate plots from existing results without re-running DER-VET:
+
+```bash
+python run_scenarios.py --plots-only
+```
+
+### 4. Find your results
+
+Each scenario produces a self-contained output folder:
+
+```
+Results/scenario_comparison/
+├── DA_DCM_CP/
+│   ├── pro_forma.csv                   # yearly financial pro forma
+│   ├── timeseries_results.csv          # 15-min dispatch results
+│   ├── npv.csv, payback.csv            # financial summaries
+│   ├── cp_event_detail_*.csv           # per-CP-event load reduction details
+│   ├── dervet_log.log                  # engine log
+│   └── plots/
+│       ├── full_year_load_vs_battery.png    # annual load + battery + SOC
+│       ├── cp_event_20250623.png            # 48h window around each CP date
+│       ├── arbitrage_day_20251214.png       # best non-CP day (DA dispatch)
+│       └── peak_shaving_day_20250610.png    # best non-CP day (DCM dispatch)
+├── DCM_retail_CP/
+│   └── ...
+└── scenario_summary.csv                # key metrics across all scenarios
+```
+
+Plots are generated conditionally: CP windows only appear when CP events are
+defined, arbitrage-day plots only when DA is active, and peak-shaving-day plots
+only when DCM is active.
+
+### 5. Modify and re-run
+
+To change what gets simulated, edit `run_scenarios.py` only -- no other files
+need to change. Common modifications:
+
+- **Change battery size**: edit the `battery` dict
+- **Add/remove services**: toggle `True`/`False` in the `services` dict
+- **Add a new CP event**: define a new dict (like `PJM_5CP`) with `id`, `label`, `rate_monthly`, `dates`, and `growth`, then include it in a scenario's `cp_events` list
+- **Add a new scenario**: append another dict to the `SCENARIOS` list
+- **Change CP dates**: update the `dates` string (format: `YYYY-MM-DD:HE` comma-separated)
+
+### Project files
+
+| File | Purpose |
+|------|---------|
+| `run_scenarios.py` | Orchestrator -- define scenarios at the top, run everything |
+| `scenario_tools/runner.py` | Configures model JSON, runs DER-VET, saves results |
+| `scenario_tools/plots.py` | Generates all plot types for a completed scenario |
+
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for

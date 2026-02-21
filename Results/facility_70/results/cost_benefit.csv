@@ -1,9 +1,7 @@
 ,Cost ($),Benefit ($)
-Lifetime Present Value,1447643.00,1281181.92
-Avoided CP Capacity Charges,0.00,740122.38
-Avoided CP Transmission Charges,0.00,478920.60
-Avoided Demand Charge,0.00,62138.94
-Avoided Energy Charge,1083.77,0.00
+Lifetime Present Value,1182790.33,114045.80
+Avoided Demand Charge,0.00,66203.45
+Avoided Energy Charge,1138.22,0.00
 BATTERY: bess 1 Capital Cost,227500.00,0.00
 BATTERY: bess 1 Decommissioning Cost,0.00,0.00
 BATTERY: bess 1 Fixed O&M Cost,27733.60,0.00
@@ -11,6 +9,6 @@ BATTERY: bess 1 Salvage Value,0.00,0.00
 BATTERY: bess 1 Variable O&M Cost,0.00,0.00
 Baseline Demand Cost,341734.89,0.00
 Baseline Energy Cost,578597.47,0.00
-Federal Tax Burden,207824.68,0.00
-State Tax Burden,63168.60,0.00
+Federal Tax Burden,4667.47,36690.29
+State Tax Burden,1418.69,11152.06
 User Constraints Value,0.00,0.00

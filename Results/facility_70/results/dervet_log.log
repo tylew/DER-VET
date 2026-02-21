@@ -1,55 +1,53 @@
-2026-02-19 23:48:53,722 - INFO - Started logging...
-2026-02-19 23:48:53,722 - INFO - JSON Model Parameter (Results/facility_70/inputs/model_parameters.json) was copied to Results (/users/fsl/documents/github/der-vet/results/facility_70/results/model_parameters.json)
-2026-02-19 23:48:53,763 - INFO - Successfully read in: /users/fsl/documents/github/der-vet/results/facility_70/inputs/timeseries.csv
-2026-02-19 23:48:53,764 - INFO - Successfully read in: /users/fsl/documents/github/der-vet/results/facility_70/inputs/monthly.csv
-2026-02-19 23:48:53,765 - INFO - Successfully read in: /users/fsl/documents/github/der-vet/results/facility_70/inputs/tariff.csv
-2026-02-19 23:48:53,766 - INFO - Successfully read in: /users/fsl/documents/github/der-vet/results/facility_70/inputs/yearly.csv
-2026-02-19 23:48:53,766 - INFO - Successfully read in: /users/fsl/documents/github/der-vet/results/facility_70/inputs/cycle_b67b52d3-b20f-40e0-9ba0-0725c533194b.csv
-2026-02-19 23:48:53,766 - INFO - Updating data for Sensitivity Analysis...
-2026-02-19 23:48:53,766 - INFO - Loading case 0...
-2026-02-19 23:48:53,766 - INFO - Data sets are loaded successfully.
-2026-02-19 23:48:53,766 - INFO - The timestep frequency was set to "15min" based on dt = 0.25 hours
-2026-02-19 23:48:53,769 - INFO - Successfully prepared the Scenario
-2026-02-19 23:48:53,769 - INFO - Successfully prepared the Finance
-2026-02-19 23:48:53,769 - INFO - Successfully prepared the Technologies
-2026-02-19 23:48:53,779 - INFO - Successfully prepared the value-stream (services)
-2026-02-19 23:48:53,779 - DEBUG - Successfully prepared the value-streams
-2026-02-19 23:48:53,780 - DEBUG - ScenarioSizing initialized ...
-2026-02-19 23:48:53,780 - INFO - Initializing: Battery-b67b52d3-b20f-40e0-9ba0-0725c533194b
-2026-02-19 23:48:53,780 - DEBUG - Initializing dervet.MicrogridDER.Battery
-2026-02-19 23:48:53,780 - DEBUG - Initializing storagevet.Technology.BatteryTech
-2026-02-19 23:48:53,780 - DEBUG - Initializing dervet.MicrogridDER.ESSSizing
-2026-02-19 23:48:53,780 - DEBUG - Initializing storagevet.Technology.EnergyStorage
-2026-02-19 23:48:53,780 - DEBUG - Initializing storagevet.Technology.DistributedEnergyResource
-2026-02-19 23:48:53,780 - DEBUG - Initializing dervet.MicrogridDER.DERExtension
-2026-02-19 23:48:53,780 - WARNING -  Construction year and operation year of bess 1 are the same. Do you mean this? Capitol Costs will appear the same year operation costs/benefits will.
-2026-02-19 23:48:53,780 - DEBUG - Initializing dervet.MicrogridDER.ContinuousSizing
-2026-02-19 23:48:53,780 - INFO - Initializing: Load-incl_site_load
-2026-02-19 23:48:53,780 - DEBUG - Initializing dervet.MicrogridDER.LoadControllable
-2026-02-19 23:48:53,780 - DEBUG - Initializing storagevet.Technology.Load
-2026-02-19 23:48:53,780 - DEBUG - Initializing storagevet.Technology.DistributedEnergyResource
-2026-02-19 23:48:53,780 - DEBUG - Initializing dervet.MicrogridDER.DERExtension
-2026-02-19 23:48:53,780 - DEBUG - Initializing dervet.MicrogridDER.ContinuousSizing
-2026-02-19 23:48:53,780 - INFO - Initializing: User
-2026-02-19 23:48:53,780 - INFO - Initializing: DCM
-2026-02-19 23:48:53,780 - INFO - Initializing: retailTimeShift
-2026-02-19 23:48:53,780 - INFO - Initializing: CP
-2026-02-19 23:48:53,798 - INFO - CP value stream: 20.0 5CP timesteps, 4.0 1CP timesteps mapped from index
-2026-02-19 23:48:53,798 - DEBUG - Finished adding value streams
-2026-02-19 23:48:53,811 - INFO - Starting optimization loop
-2026-02-19 23:48:53,812 - INFO - 23:48:53 Running Optimization Problem starting at 2025-01-01 00:00:00 hb
-2026-02-19 23:48:53,887 - DEBUG - time took to make demand charge term: 0.06656694412231445
-2026-02-19 23:48:53,981 - INFO - Finished setting up the problem. Solving now.
-2026-02-19 23:48:53,981 - DEBUG - Using GLPK_MI solver
-2026-02-19 23:48:53,981 - DEBUG - The solver GLPK_MI is not installed.
-2026-02-19 23:48:53,981 - DEBUG - The solver was unable to find a solution... let's try another solver.
-2026-02-19 23:48:53,981 - DEBUG - Using ECOS_BB solver
-2026-02-19 23:48:57,224 - INFO - Time (seconds) for solver to finish: 3.2431440353393555
-2026-02-19 23:48:57,225 - INFO - LP relaxation is clean (no simultaneous charge/discharge) -- skipping MIP.
-2026-02-19 23:48:57,225 - INFO - Optimization problem was optimal
-2026-02-19 23:48:57,234 - DEBUG - Performing Post Optimization Analysis...
-2026-02-19 23:48:57,242 - INFO - For better alignment with "Net Power" in the output time series, we multiply POI: Max Export values by -1
-2026-02-19 23:48:57,284 - DEBUG - Finished post optimization analysis
-2026-02-19 23:48:57,876 - INFO - Results have been saved to: /users/fsl/documents/github/der-vet/results/facility_70/results
-2026-02-19 23:48:57,877 - INFO - DER results have been saved to: /users/fsl/documents/github/der-vet/results/facility_70/results
-2026-02-19 23:48:57,877 - INFO - DERVET runtime: 4.096914291381836
+2026-02-20 23:32:35,945 - INFO - Started logging...
+2026-02-20 23:32:35,946 - INFO - JSON Model Parameter (/Users/fsl/Documents/GitHub/DER-VET/Results/facility_70/inputs/model_parameters.json) was copied to Results (/users/fsl/documents/github/der-vet/results/facility_70/results/model_parameters.json)
+2026-02-20 23:32:35,987 - INFO - Successfully read in: /users/fsl/documents/github/der-vet/results/facility_70/inputs/timeseries.csv
+2026-02-20 23:32:35,988 - INFO - Successfully read in: /users/fsl/documents/github/der-vet/results/facility_70/inputs/monthly.csv
+2026-02-20 23:32:35,989 - INFO - Successfully read in: /users/fsl/documents/github/der-vet/results/facility_70/inputs/tariff.csv
+2026-02-20 23:32:35,989 - INFO - Successfully read in: /users/fsl/documents/github/der-vet/results/facility_70/inputs/yearly.csv
+2026-02-20 23:32:35,990 - INFO - Successfully read in: /users/fsl/documents/github/der-vet/results/facility_70/inputs/cycle_b67b52d3-b20f-40e0-9ba0-0725c533194b.csv
+2026-02-20 23:32:35,990 - INFO - Updating data for Sensitivity Analysis...
+2026-02-20 23:32:35,990 - INFO - Loading case 0...
+2026-02-20 23:32:35,990 - INFO - Data sets are loaded successfully.
+2026-02-20 23:32:35,990 - INFO - The timestep frequency was set to "15min" based on dt = 0.25 hours
+2026-02-20 23:32:35,993 - INFO - Successfully prepared the Scenario
+2026-02-20 23:32:35,993 - INFO - Successfully prepared the Finance
+2026-02-20 23:32:35,993 - INFO - Successfully prepared the Technologies
+2026-02-20 23:32:36,003 - INFO - Successfully prepared the value-stream (services)
+2026-02-20 23:32:36,003 - DEBUG - Successfully prepared the value-streams
+2026-02-20 23:32:36,003 - DEBUG - ScenarioSizing initialized ...
+2026-02-20 23:32:36,003 - INFO - Initializing: Battery-b67b52d3-b20f-40e0-9ba0-0725c533194b
+2026-02-20 23:32:36,003 - DEBUG - Initializing dervet.MicrogridDER.Battery
+2026-02-20 23:32:36,003 - DEBUG - Initializing storagevet.Technology.BatteryTech
+2026-02-20 23:32:36,003 - DEBUG - Initializing dervet.MicrogridDER.ESSSizing
+2026-02-20 23:32:36,003 - DEBUG - Initializing storagevet.Technology.EnergyStorage
+2026-02-20 23:32:36,003 - DEBUG - Initializing storagevet.Technology.DistributedEnergyResource
+2026-02-20 23:32:36,003 - DEBUG - Initializing dervet.MicrogridDER.DERExtension
+2026-02-20 23:32:36,003 - WARNING -  Construction year and operation year of bess 1 are the same. Do you mean this? Capitol Costs will appear the same year operation costs/benefits will.
+2026-02-20 23:32:36,003 - DEBUG - Initializing dervet.MicrogridDER.ContinuousSizing
+2026-02-20 23:32:36,003 - INFO - Initializing: Load-incl_site_load
+2026-02-20 23:32:36,003 - DEBUG - Initializing dervet.MicrogridDER.LoadControllable
+2026-02-20 23:32:36,003 - DEBUG - Initializing storagevet.Technology.Load
+2026-02-20 23:32:36,003 - DEBUG - Initializing storagevet.Technology.DistributedEnergyResource
+2026-02-20 23:32:36,003 - DEBUG - Initializing dervet.MicrogridDER.DERExtension
+2026-02-20 23:32:36,003 - DEBUG - Initializing dervet.MicrogridDER.ContinuousSizing
+2026-02-20 23:32:36,003 - INFO - Initializing: User
+2026-02-20 23:32:36,003 - INFO - Initializing: DCM
+2026-02-20 23:32:36,004 - INFO - Initializing: retailTimeShift
+2026-02-20 23:32:36,004 - DEBUG - Finished adding value streams
+2026-02-20 23:32:36,014 - INFO - Starting optimization loop
+2026-02-20 23:32:36,015 - INFO - 23:32:36 Running Optimization Problem starting at 2025-01-01 00:00:00 hb
+2026-02-20 23:32:36,089 - DEBUG - time took to make demand charge term: 0.0653378963470459
+2026-02-20 23:32:36,166 - INFO - Finished setting up the problem. Solving now.
+2026-02-20 23:32:36,166 - DEBUG - Using GLPK_MI solver
+2026-02-20 23:32:36,166 - DEBUG - The solver GLPK_MI is not installed.
+2026-02-20 23:32:36,166 - DEBUG - The solver was unable to find a solution... let's try another solver.
+2026-02-20 23:32:36,166 - DEBUG - Using ECOS_BB solver
+2026-02-20 23:32:39,056 - INFO - Time (seconds) for solver to finish: 2.889899969100952
+2026-02-20 23:32:39,056 - INFO - LP relaxation is clean (no simultaneous charge/discharge) -- skipping MIP.
+2026-02-20 23:32:39,056 - INFO - Optimization problem was optimal
+2026-02-20 23:32:39,065 - DEBUG - Performing Post Optimization Analysis...
+2026-02-20 23:32:39,071 - INFO - For better alignment with "Net Power" in the output time series, we multiply POI: Max Export values by -1
+2026-02-20 23:32:39,093 - DEBUG - Finished post optimization analysis
+2026-02-20 23:32:39,661 - INFO - Results have been saved to: /users/fsl/documents/github/der-vet/results/facility_70/results
+2026-02-20 23:32:39,662 - INFO - DER results have been saved to: /users/fsl/documents/github/der-vet/results/facility_70/results
+2026-02-20 23:32:39,662 - INFO - DERVET runtime: 3.6591858863830566
